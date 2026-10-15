@@ -108,6 +108,111 @@ if (typeof window !== "undefined") {
     ).IntersectionObserver = _IntersectionObserver;
   }
 
+  // ---------------------------------------------------------------------
+  // PDF.js geometry globals.
+  //
+  // ``pdfjs-dist`` evaluates ``src/display/canvas.js`` at *import* time and
+  // touches DOMMatrix / DOMPoint / DOMRect / Path2D there. jsdom ships none
+  // of them, so any test file that transitively imports ``PdfDocumentPreview``
+  // (via ``react-pdf``) dies during collection with
+  // "ReferenceError: DOMMatrix is not defined" — the whole file fails to load
+  // and none of its tests run.
+  //
+  // Minimal stubs are sufficient: none of these tests rasterise a real PDF,
+  // they only need the module to finish evaluating.
+  // ---------------------------------------------------------------------
+  class _DOMMatrix {
+    a = 1; b = 0; c = 0; d = 1; e = 0; f = 0;
+    m11 = 1; m12 = 0; m13 = 0; m14 = 0;
+    m21 = 0; m22 = 1; m23 = 0; m24 = 0;
+    m31 = 0; m32 = 0; m33 = 1; m34 = 0;
+    m41 = 0; m42 = 0; m43 = 0; m44 = 1;
+    is2D = true;
+    isIdentity = true;
+    constructor(_init?: unknown) {
+      void _init;
+    }
+    multiply() { return this; }
+    multiplySelf() { return this; }
+    preMultiplySelf() { return this; }
+    translate() { return this; }
+    translateSelf() { return this; }
+    scale() { return this; }
+    scaleSelf() { return this; }
+    rotate() { return this; }
+    rotateSelf() { return this; }
+    rotateAxisAngle() { return this; }
+    skewX() { return this; }
+    skewY() { return this; }
+    flipX() { return this; }
+    flipY() { return this; }
+    inverse() { return this; }
+    invertSelf() { return this; }
+    transformPoint(point: unknown) { return point ?? new _DOMPoint(); }
+    toFloat32Array() { return new Float32Array(16); }
+    toFloat64Array() { return new Float64Array(16); }
+    toString() { return "matrix(1, 0, 0, 1, 0, 0)"; }
+  }
+
+  class _DOMPoint {
+    x: number; y: number; z: number; w: number;
+    constructor(x = 0, y = 0, z = 0, w = 1) {
+      this.x = x; this.y = y; this.z = z; this.w = w;
+    }
+    matrixTransform() { return this; }
+  }
+
+  class _DOMRect {
+    x: number; y: number; width: number; height: number;
+    constructor(x = 0, y = 0, width = 0, height = 0) {
+      this.x = x; this.y = y; this.width = width; this.height = height;
+    }
+    get top() { return this.y; }
+    get left() { return this.x; }
+    get right() { return this.x + this.width; }
+    get bottom() { return this.y + this.height; }
+  }
+
+  class _Path2D {
+    addPath() {}
+    arc() {}
+    arcTo() {}
+    bezierCurveTo() {}
+    closePath() {}
+    ellipse() {}
+    lineTo() {}
+    moveTo() {}
+    quadraticCurveTo() {}
+    rect() {}
+    roundRect() {}
+  }
+
+  const _geometryGlobals = {
+    DOMMatrix: _DOMMatrix,
+    DOMMatrixReadOnly: _DOMMatrix,
+    DOMPoint: _DOMPoint,
+    DOMPointReadOnly: _DOMPoint,
+    DOMRect: _DOMRect,
+    DOMRectReadOnly: _DOMRect,
+    Path2D: _Path2D,
+  } as const;
+
+  for (const [name, ctor] of Object.entries(_geometryGlobals)) {
+    const already = (window as unknown as Record<string, unknown>)[name];
+    if (typeof already === "undefined") {
+      Object.defineProperty(window, name, {
+        writable: true,
+        configurable: true,
+        value: ctor,
+      });
+      Object.defineProperty(globalThis, name, {
+        writable: true,
+        configurable: true,
+        value: ctor,
+      });
+    }
+  }
+
   // jsdom doesn't implement ``getComputedStyle().transition`` properly,
   // so antd's wave / motion can throw — silence that one noisy console
   // warning without hiding real errors.

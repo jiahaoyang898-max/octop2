@@ -123,7 +123,8 @@ function handleSetupRequired(): void {
   if (
     path.startsWith("/setup") ||
     path.startsWith("/login") ||
-    path.startsWith("/invite")
+    path.startsWith("/invite") ||
+    path.startsWith("/register")
   ) {
     return;
   }
@@ -312,7 +313,8 @@ function handleUnauthorized(): void {
   if (
     path.startsWith("/setup") ||
     path.startsWith("/login") ||
-    path.startsWith("/invite")
+    path.startsWith("/invite") ||
+    path.startsWith("/register")
   )
     return;
   _redirectingToLogin = true;

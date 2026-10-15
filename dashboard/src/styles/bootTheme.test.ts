@@ -76,7 +76,23 @@ describe("index.html boot theme", () => {
     expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
   });
 
-  it("follows the OS when preference is system or missing", () => {
+  it("defaults to dark when no preference is stored（墨枢暗色优先）", () => {
+    stubMatchMedia(false); // OS 为亮色，仍应默认暗色
+    eval(bootThemeScript());
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+
+    document.documentElement.removeAttribute("data-theme");
+    stubMatchMedia(true);
+    eval(bootThemeScript());
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+  });
+
+  it("follows the OS when preference is explicitly system", () => {
+    localStorage.setItem(
+      THEME_STORAGE_KEY,
+      JSON.stringify({ preference: "system", palette: "moshu" }),
+    );
+    stubMatchMedia(true);
     eval(bootThemeScript());
     expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
 

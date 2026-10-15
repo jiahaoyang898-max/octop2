@@ -20,6 +20,12 @@ import {
  * legacy fields populated (``setup_done``, ``enabled``, ``has_password``)
  * so existing finnie-derived components compile until they're replaced
  * by the octop settings editors in phase 14.6.
+ *
+ * Deliberately absent: any "does this username exist / can it sign in" probe.
+ * No anonymous route answers that, and a real ``POST /auth/login`` attempt
+ * increments the server-side lockout counter and writes an ``auth.failed``
+ * security-audit row (src/octop/infra/users/manager.py) — a mount-time probe
+ * would lock the demo account after a few page refreshes.
  */
 
 export interface AuthStatus {

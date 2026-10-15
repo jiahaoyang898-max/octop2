@@ -1,7 +1,7 @@
 /* ===================================================================
    Octop Design System v3 – CSS Custom Properties
    Default brand: Elegant Rose #E85D75
-   Palettes via html[data-palette="rose|tech|indigo|teal|violet|emerald|amber|slate"]
+   Palettes via html[data-palette="rose|tech|indigo|teal|violet|emerald|amber|slate|moshu"]
    Mode via html[data-theme="light|dark"]
    =================================================================== */
 
@@ -193,43 +193,48 @@ html[data-theme="light"] {
 /* ---------- DARK THEME ---------- */
 html[data-theme="dark"] {
   /* ---- Backgrounds ---- */
-  --fn-bg-primary: #141414;
-  --fn-bg-secondary: #1a1a1a;
-  --fn-bg-tertiary: #222222;
-  --fn-bg-elevated: #1e1e1e;
-  --fn-bg-layout: #0e0e0e;
-  --fn-bg-container: #141414;
-  --fn-bg-hover: rgba(232, 93, 117, 0.08);
-  --fn-bg-active: rgba(232, 93, 117, 0.14);
-  --fn-bg-selected: rgba(232, 93, 117, 0.1);
-  --fn-bg-code: #1e1e1e;
-  --fn-bg-toolbar: #161616;
-  --fn-bg-toolbar-hover: #222222;
+  --fn-bg-primary: #0F1626;
+  --fn-bg-secondary: #131C2E;
+  --fn-bg-tertiary: #1A2438;
+  --fn-bg-elevated: #131C2E;
+  --fn-bg-layout: #060A12;
+  --fn-bg-container: #0F1626;
+  --fn-bg-hover: rgba(76, 141, 255, 0.08);
+  --fn-bg-active: rgba(76, 141, 255, 0.14);
+  --fn-bg-selected: rgba(76, 141, 255, 0.10);
+  --fn-bg-code: #0F1626;
+  --fn-bg-toolbar: #0F1626;
+  --fn-bg-toolbar-hover: #1A2438;
   --fn-bg-input-label: #1a1a1a;
   --fn-bg-success-light: rgba(16, 185, 129, 0.08);
   --fn-bg-danger-light: rgba(239, 68, 68, 0.08);
   --fn-bg-warning-light: rgba(245, 158, 11, 0.08);
   --fn-bg-info-light: rgba(59, 130, 246, 0.08);
-  --fn-bg-glass: rgba(14, 14, 14, 0.8);
-  --fn-bg-sidebar: #141414;
-  --fn-bg-base: #141414;
-  --fn-bg-page: #0e0e0e;
+  --fn-bg-glass: linear-gradient(
+    180deg,
+    rgba(19, 28, 46, 0.86),
+    rgba(15, 22, 38, 0.92)
+  );
+  --fn-bg-sidebar: #0A101C;
+  --fn-bg-base: #0A101C;
+  --fn-bg-page: #060A12;
   --fn-bg-quaternary: rgba(255, 255, 255, 0.04);
-  --fn-bg-subtle: #1e1e1e;
-  --fn-bg-secondary-hover: #222222;
-  --fn-bg-secondary-active: #2a2a2a;
-  --fn-surface: #1e1e1e;
-  --fn-surface-sunken: #1a1a1a;
+  --fn-bg-subtle: #131C2E;
+  --fn-bg-secondary-hover: #1A2438;
+  --fn-bg-secondary-active: #24304A;
+  --fn-surface: #131C2E;
+  --fn-surface-sunken: #0F1626;
   --fn-fill-hover: rgba(255, 255, 255, 0.08);
   --fn-fill-tertiary: rgba(255, 255, 255, 0.06);
 
   /* ---- Text ---- */
-  --fn-text-primary: rgba(255, 255, 255, 0.9);
-  --fn-text-secondary: rgba(255, 255, 255, 0.6);
-  --fn-text-tertiary: rgba(255, 255, 255, 0.35);
-  --fn-text-quaternary: rgba(255, 255, 255, 0.2);
-  --fn-text-placeholder: rgba(255, 255, 255, 0.16);
-  --fn-text-disabled: rgba(255, 255, 255, 0.16);
+  /* 墨枢 §8.3 文字层级：主 #E6EDF7 / 次 #8FA0BC（均以 alpha 叠加做弱化层） */
+  --fn-text-primary: #e6edf7;
+  --fn-text-secondary: #8fa0bc;
+  --fn-text-tertiary: rgba(143, 160, 188, 0.78);
+  --fn-text-quaternary: rgba(143, 160, 188, 0.42);
+  --fn-text-placeholder: rgba(143, 160, 188, 0.62);
+  --fn-text-disabled: rgba(143, 160, 188, 0.7);
   --fn-text-inverse: #0e0e0e;
   --fn-text-brand: #f08b9a;
   --fn-text-danger: #f87171;
@@ -239,16 +244,17 @@ html[data-theme="dark"] {
   --fn-font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
 
   /* ---- Borders ---- */
-  --fn-border-primary: rgba(255, 255, 255, 0.08);
-  --fn-border-secondary: rgba(255, 255, 255, 0.05);
-  --fn-border-tertiary: rgba(255, 255, 255, 0.03);
-  --fn-border-input: rgba(255, 255, 255, 0.12);
-  --fn-border-input-alt: rgba(255, 255, 255, 0.09);
+  /* 墨枢 §1.5：发丝边框全局统一为 line = rgba(148,163,184,.14)，按 alpha 分档 */
+  --fn-border-primary: rgba(148, 163, 184, 0.14);
+  --fn-border-secondary: rgba(148, 163, 184, 0.1);
+  --fn-border-tertiary: rgba(148, 163, 184, 0.06);
+  --fn-border-input: rgba(148, 163, 184, 0.18);
+  --fn-border-input-alt: rgba(148, 163, 184, 0.14);
   --fn-border-focus: #f08b9a;
-  --fn-border: rgba(255, 255, 255, 0.08);
-  --fn-border-color: rgba(255, 255, 255, 0.08);
-  --fn-border-strong: rgba(255, 255, 255, 0.16);
-  --fn-border-subtle: rgba(255, 255, 255, 0.05);
+  --fn-border: rgba(148, 163, 184, 0.14);
+  --fn-border-color: rgba(148, 163, 184, 0.14);
+  --fn-border-strong: rgba(148, 163, 184, 0.28);
+  --fn-border-subtle: rgba(148, 163, 184, 0.1);
   --fn-border-success: rgba(52, 211, 153, 0.25);
 
   /* ---- Brand (rose, lightened for dark bg) ---- */
@@ -281,26 +287,27 @@ html[data-theme="dark"] {
   --fn-assistant-bubble-border: rgba(240, 139, 154, 0.14);
   --fn-assistant-glow-color: 240, 139, 154;
 
-  /* ---- Semantic ---- */
-  --fn-color-success: #34d399;
-  --fn-color-success-border: rgba(52, 211, 153, 0.25);
-  --fn-color-success-glow: rgba(52, 211, 153, 0.2);
+  /* ---- Semantic ----
+     墨枢 §8.5：success=grass #3DDC97、warning=amber #F5B544、info=blue #4C8DFF  */
+  --fn-color-success: #3ddc97;
+  --fn-color-success-border: rgba(61, 220, 151, 0.3);
+  --fn-color-success-glow: rgba(61, 220, 151, 0.24);
   --fn-color-danger: #f87171;
   --fn-color-danger-border: rgba(248, 113, 113, 0.25);
-  --fn-color-warning: #fbbf24;
-  --fn-color-warning-border: rgba(251, 191, 36, 0.25);
-  --fn-color-warning-text: #fbbf24;
-  --fn-color-info: #60a5fa;
-  --fn-color-info-border: rgba(96, 165, 250, 0.25);
+  --fn-color-warning: #f5b544;
+  --fn-color-warning-border: rgba(245, 181, 68, 0.3);
+  --fn-color-warning-text: #f5b544;
+  --fn-color-info: #4c8dff;
+  --fn-color-info-border: rgba(76, 141, 255, 0.3);
   --fn-color-error: #f87171;
   --fn-color-error-bg: rgba(239, 68, 68, 0.08);
   --fn-color-error-border: rgba(248, 113, 113, 0.25);
-  --fn-success: #34d399;
-  --fn-success-bg: rgba(16, 185, 129, 0.08);
-  --fn-success-border: rgba(52, 211, 153, 0.25);
+  --fn-success: #3ddc97;
+  --fn-success-bg: rgba(61, 220, 151, 0.1);
+  --fn-success-border: rgba(61, 220, 151, 0.3);
   --fn-danger: #f87171;
-  --fn-warning-color: #fbbf24;
-  --fn-color-file-zip: #fbbf24;
+  --fn-warning-color: #f5b544;
+  --fn-color-file-zip: #f5b544;
   --fn-color-file-word: #60a5fa;
   --fn-color-file-ppt: #f87171;
   --fn-color-file-image: #f472b6;
@@ -338,7 +345,7 @@ html[data-theme="dark"] {
   /* ---- Sidebar ---- */
   --fn-sidebar-width: 240px;
   --fn-sidebar-bg: #141414;
-  --fn-sidebar-border: rgba(255, 255, 255, 0.06);
+  --fn-sidebar-border: rgba(148, 163, 184, 0.14);
   --fn-sidebar-item-hover: rgba(255, 255, 255, 0.05);
   --fn-sidebar-item-active-bg: rgba(232, 93, 117, 0.14);
   --fn-sidebar-item-active: rgba(232, 93, 117, 0.14);
@@ -366,6 +373,81 @@ html[data-theme="dark"] {
   --fn-radius-lg: 12px;
   --fn-radius-xl: 18px;
   --fn-radius-full: 9999px;
+}
+
+/* ===================================================================
+   墨枢设计 Token —— 对应 design/墨枢-visual-spec.md §8「CSS 变量名映射表」
+   只补设计稿里有、而上面 Octop 体系里没有的 token；不覆盖已存在的品牌变量。
+   =================================================================== */
+html[data-theme="dark"] {
+  /* ---- §8.2 背景层级（panel / card / 浮起 tint / 玻璃渐变 / 环境光） ---- */
+  --fn-bg-panel: #0f1626;
+  --fn-bg-card: #131c2e;
+  --fn-bg-tint-1: rgba(255, 255, 255, 0.02);
+  --fn-bg-tint-2: rgba(255, 255, 255, 0.04);
+  --fn-bg-tint-3: rgba(255, 255, 255, 0.06);
+  --fn-bg-tint-4: rgba(255, 255, 255, 0.08);
+  --fn-bg-ambient: radial-gradient(
+      1100px 620px at 78% -12%,
+      rgba(76, 141, 255, 0.16),
+      transparent 62%
+    ),
+    radial-gradient(
+      900px 520px at 6% 108%,
+      rgba(46, 217, 224, 0.11),
+      transparent 60%
+    );
+
+  /* ---- §8.1 品牌强调与渐变 ---- */
+  --fn-color-accent-head: #7fd7ff;
+  --fn-gradient-brand: linear-gradient(135deg, #4c8dff 0%, #2ed9e0 120%);
+  --fn-gradient-text: linear-gradient(
+    92deg,
+    #7fd7ff 0%,
+    #4c8dff 48%,
+    #2ed9e0 100%
+  );
+  --fn-gradient-avatar-b: linear-gradient(135deg, #7fd7ff, #2ed9e0);
+  --fn-gradient-avatar-c: linear-gradient(135deg, #4c8dff, #9b8cff);
+  --fn-gradient-avatar-d: linear-gradient(135deg, #f5b544, #f57c5a);
+  --fn-gradient-avatar-e: linear-gradient(135deg, #3ddc97, #2ed9e0);
+
+  /* ---- §8.4 边框与分割 ---- */
+  --fn-border-hairline: rgba(148, 163, 184, 0.14);
+  --fn-border-focus-cyan: rgba(46, 217, 224, 0.55);
+  --fn-hair-top: linear-gradient(
+    180deg,
+    rgba(46, 217, 224, 0.55),
+    rgba(76, 141, 255, 0.1) 45%,
+    rgba(148, 163, 184, 0.06)
+  );
+  --fn-divide: rgba(255, 255, 255, 0.05);
+
+  /* ---- §8.5 语义色 / 辅助色（设计稿原始 hex） ---- */
+  --fn-color-category: #9b8cff;
+  --fn-color-cyan: #2ed9e0;
+  --fn-color-grass: #3ddc97;
+  --fn-color-amber: #f5b544;
+
+  /* ---- §8.8 阴影 / 效果 ---- */
+  --fn-shadow-popover: 0 28px 60px -30px rgba(0, 0, 0, 1);
+  --fn-shadow-composer: 0 28px 60px -40px rgba(0, 0, 0, 1);
+  --fn-shadow-primary: 0 10px 26px -14px rgba(76, 141, 255, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  --fn-shadow-primary-lg: 0 14px 34px -16px rgba(76, 141, 255, 0.95),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  --fn-shadow-glow: 0 16px 40px -28px rgba(76, 141, 255, 0.95);
+  --fn-shadow-seg: inset 0 0 0 1px rgba(76, 141, 255, 0.45),
+    0 6px 18px -10px rgba(76, 141, 255, 0.9);
+  --fn-ring-focus: 0 0 0 3px rgba(46, 217, 224, 0.12);
+  --fn-backdrop: blur(14px);
+  --fn-grid-size: 56px;
+
+  /* ---- §8.9 布局 ---- */
+  --fn-header-h: 56px;
+  --fn-sidebar-w: 268px;
+  --fn-panel-w: 330px;
+  --fn-content-max: 820px;
 }
 
 /* ===================================================================
@@ -868,6 +950,86 @@ html[data-palette="slate"][data-theme="dark"] {
   --fn-sidebar-item-active-bg: rgba(148, 163, 184, 0.16);
   --fn-sidebar-item-active: rgba(148, 163, 184, 0.16);
   --fn-sidebar-item-active-text: #94a3b8;
+}
+
+/* ---------- MOSHU (墨枢 #4C8DFF / 实色 #3A6BE0) ---------- */
+/* ⚠️ 下面 light / dark 两块的色值必须与 themePalettes.ts 中
+      ANTD_BRAND_TOKENS.moshu 的 antd token 保持一致（改动需两边同步）。 */
+html[data-palette="moshu"]:not([data-theme="dark"]) {
+  --fn-bg-hover: rgba(76, 141, 255, 0.04);
+  --fn-bg-active: rgba(76, 141, 255, 0.08);
+  --fn-bg-selected: rgba(76, 141, 255, 0.06);
+  --fn-text-brand: #3868dc;
+  --fn-logo-color: #3a6be0;
+  --fn-border-focus: #3a6be0;
+  --fn-color-brand: #3a6be0;
+  --fn-color-brand-hover: #2e56c7;
+  --fn-color-brand-soft: #2e56c7;
+  --fn-color-brand-bg: rgba(76, 141, 255, 0.06);
+  --fn-color-brand-light: #edf3ff;
+  --fn-color-brand-shadow: rgba(76, 141, 255, 0.15);
+  --fn-color-brand-glow: rgba(76, 141, 255, 0.08);
+  --fn-assistant-bubble-bg-gradient: linear-gradient(
+    135deg,
+    rgba(237, 243, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(214, 229, 255, 0.45) 100%
+  );
+  --fn-assistant-bubble-border: rgba(76, 141, 255, 0.14);
+  --fn-assistant-glow-color: 76, 141, 255;
+  --fn-tag-channel-text: #3868dc;
+  --fn-shadow-brand: 0 4px 14px rgba(76, 141, 255, 0.18);
+  --fn-shadow-brand-lg: 0 8px 24px rgba(76, 141, 255, 0.24);
+  --fn-row-selected-bg: rgba(76, 141, 255, 0.05);
+  --fn-row-selected-hover: rgba(76, 141, 255, 0.09);
+  --fn-row-selected-alt-bg: rgba(76, 141, 255, 0.04);
+  --fn-row-selected-alt-hover: rgba(76, 141, 255, 0.08);
+  --fn-row-selected-border: #3a6be0;
+  --fn-sidebar-item-active-bg: #edf3ff;
+  --fn-sidebar-item-active: rgba(76, 141, 255, 0.08);
+  --fn-sidebar-item-active-text: #3868dc;
+}
+
+html[data-palette="moshu"][data-theme="dark"] {
+  /* 本块的 --fn-text-brand / --fn-color-brand-hover ↔ themePalettes.ts 的
+     ANTD_BRAND_TOKENS.moshu.dark.colorPrimaryText / colorPrimaryHover，改动需两边同步。 */
+  --fn-bg-hover: rgba(76, 141, 255, 0.1);
+  --fn-bg-active: rgba(76, 141, 255, 0.16);
+  --fn-bg-selected: rgba(76, 141, 255, 0.12);
+  --fn-text-brand: #7ba7ff;
+  --fn-logo-color: #7ba7ff;
+  --fn-border-focus: #4c8dff;
+  --fn-color-brand: #3a6be0;
+  --fn-color-brand-hover: #2e56c7;
+  --fn-color-brand-soft: #2e56c7;
+  --fn-color-brand-bg: rgba(76, 141, 255, 0.14);
+  --fn-color-brand-light: rgba(76, 141, 255, 0.18);
+  --fn-color-brand-shadow: rgba(76, 141, 255, 0.28);
+  --fn-color-brand-glow: rgba(76, 141, 255, 0.1);
+  --fn-assistant-bubble-bg-gradient: linear-gradient(
+    135deg,
+    rgba(76, 141, 255, 0.14) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(123, 167, 255, 0.08) 100%
+  );
+  --fn-assistant-bubble-border: rgba(76, 141, 255, 0.18);
+  --fn-assistant-glow-color: 76, 141, 255;
+  --fn-tag-channel-text: #7ba7ff;
+  --fn-shadow-brand: 0 4px 14px rgba(76, 141, 255, 0.26);
+  --fn-shadow-brand-lg: 0 8px 24px rgba(76, 141, 255, 0.34);
+  --fn-row-selected-bg: rgba(76, 141, 255, 0.12);
+  --fn-row-selected-hover: rgba(76, 141, 255, 0.18);
+  --fn-row-selected-alt-bg: rgba(76, 141, 255, 0.1);
+  --fn-row-selected-alt-hover: rgba(76, 141, 255, 0.15);
+  --fn-row-selected-border: #4c8dff;
+  --fn-sidebar-item-active-bg: rgba(76, 141, 255, 0.16);
+  --fn-sidebar-item-active: rgba(76, 141, 255, 0.16);
+  --fn-sidebar-item-active-text: #7ba7ff;
+  /* 框架底色：默认暗色块里这两个仍是 Octop 的 #141414 / #0e0e0e，
+     未被任何调色板覆盖，需在 moshu 下对齐墨枢层级（base #0A101C / panel #0F1626）。 */
+  --fn-sidebar-bg: #0a101c;
+  --fn-header-bg: #0f1626;
+
 }
 
 /* ---------- GLOBAL RESET & TRANSITIONS ---------- */

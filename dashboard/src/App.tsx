@@ -14,6 +14,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import MainLayout from "./layouts/MainLayout";
 import LoginPage from "./pages/Login";
+import RegisterPage from "./pages/Login/Register";
 import OidcComplete from "./pages/Login/OidcComplete";
 import SetupPage from "./pages/Setup";
 import InvitePage from "./pages/Invite";
@@ -133,6 +134,14 @@ function ThemedApp() {
           ) : null}
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/register"
+              element={
+                <AuthGuard guestOnly>
+                  <RegisterPage />
+                </AuthGuard>
+              }
+            />
             <Route path="/login/oidc/complete" element={<OidcComplete />} />
             <Route path="/setup" element={<SetupPage />} />
             <Route path="/invite" element={<InvitePage />} />

@@ -19,6 +19,11 @@ vi.mock("../../../api/modules/octopThreads", () => ({
     rename: vi.fn(),
     rebind: vi.fn(),
   },
+  // toSession() normalises artifacts through this helper. The thread rows used
+  // here carry no artifact payload, so the real implementation returns [] as
+  // well — mocking it keeps the module surface complete (a missing export makes
+  // vitest throw on access, which silently emptied every session list).
+  normalizeThreadArtifacts: vi.fn(() => []),
 }));
 
 function threadRow(threadId: string, agentExtra?: Partial<{ title: string }>) {

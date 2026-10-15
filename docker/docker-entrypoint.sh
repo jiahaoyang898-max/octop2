@@ -46,7 +46,7 @@ octop_random_password() {
 DEFAULT_PASSWORD="${OCTOP_DEFAULT_PASSWORD:-}"
 
 if [ ! -f "$DB_FILE" ]; then
-    echo "[entrypoint] 首次启动，正在初始化 Octop..."
+    echo "[entrypoint] 首次启动，正在初始化 墨枢..."
 
     if [ -z "$DEFAULT_PASSWORD" ]; then
         DEFAULT_PASSWORD="$(octop_random_password)"
@@ -82,8 +82,8 @@ if [ ! -f "$DB_FILE" ]; then
     rm -f "$init_log"
 
     cat > "$CREDENTIAL_FILE" << EOF
-Octop Login Credential
-======================
+墨枢 Login Credential
+========================
 URL:      http://<host>:${PORT}
 Username: ${ADMIN_USERNAME}
 Password: ${DEFAULT_PASSWORD}
@@ -100,7 +100,7 @@ EOF
 fi
 
 if [ $# -eq 0 ]; then
-    echo "[entrypoint] 正在启动 Octop，端口 $PORT..."
+    echo "[entrypoint] 正在启动 墨枢，端口 $PORT..."
     exec octop run --host 0.0.0.0 --port "$PORT"
 fi
 

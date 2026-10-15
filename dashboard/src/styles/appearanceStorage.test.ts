@@ -17,8 +17,8 @@ afterEach(() => {
 });
 
 describe("appearanceStorage", () => {
-  it("defaults to system preference and rose palette", () => {
-    expect(readStoredAppearance().preference).toBe("system");
+  it("defaults to dark preference (墨枢 is dark-first)", () => {
+    expect(readStoredAppearance().preference).toBe("dark");
     expect(readStoredAppearance().palette).toBe(DEFAULT_PALETTE);
   });
 
@@ -105,14 +105,14 @@ describe("appearanceStorage", () => {
 
   it("falls back safely on invalid JSON or unknown values", () => {
     localStorage.setItem(THEME_STORAGE_KEY, "{not-json");
-    expect(readStoredAppearance().preference).toBe("system");
+    expect(readStoredAppearance().preference).toBe("dark");
     expect(readStoredAppearance().palette).toBe(DEFAULT_PALETTE);
 
     localStorage.setItem(
       THEME_STORAGE_KEY,
       JSON.stringify({ preference: "neon", palette: "pink" }),
     );
-    expect(readStoredAppearance().preference).toBe("system");
+    expect(readStoredAppearance().preference).toBe("dark");
     expect(readStoredAppearance().palette).toBe(DEFAULT_PALETTE);
   });
 });

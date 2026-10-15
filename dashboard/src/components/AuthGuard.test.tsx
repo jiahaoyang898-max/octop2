@@ -88,7 +88,13 @@ describe("AuthGuard offline boot", () => {
       </MemoryRouter>,
     );
 
-    expect(await screen.findByText("protected-shell")).toBeInTheDocument();
+    // Re-query inside waitFor instead of holding the node that findByText
+    // returns: NavProbe navigates to /b on mount, so React swaps the matched
+    // element and the captured reference goes stale — toBeInTheDocument() would
+    // then fail on a detached node even though the shell is plainly mounted.
+    await waitFor(() => {
+      expect(screen.getByText("protected-shell")).toBeInTheDocument();
+    });
     await waitFor(() => {
       expect(authApi.getAuthStatus).toHaveBeenCalledTimes(1);
     });
@@ -98,6 +104,68 @@ describe("AuthGuard offline boot", () => {
     });
     expect(authApi.getAuthStatus).toHaveBeenCalledTimes(1);
     expect(authApi.me).toHaveBeenCalledTimes(1);
+  });
+
+  it("redirects an authenticated visitor away from a guest-only route (B-03)", async () => {
+    vi.mocked(getAuthToken).mockReturnValue("tok");
+    vi.mocked(authApi.getAuthStatus).mockResolvedValue({
+      setup_required: false,
+      has_admin: true,
+    } as never);
+    vi.mocked(authApi.me).mockResolvedValue({
+      user_id: 1,
+      username: "admin",
+      role: "admin",
+      locale: "zh",
+    } as never);
+
+    render(
+      <MemoryRouter initialEntries={["/register"]}>
+        <Routes>
+          <Route
+            path="/register"
+            element={
+              <AuthGuard guestOnly>
+                <div>register-form</div>
+              </AuthGuard>
+            }
+          />
+          <Route path="/" element={<div>home-shell</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    // 已登录 → 不渲染访客页，重定向到首页
+    await waitFor(() => {
+      expect(screen.getByText("home-shell")).toBeInTheDocument();
+    });
+    expect(screen.queryByText("register-form")).not.toBeInTheDocument();
+  });
+
+  it("renders a guest-only route when there is no token", async () => {
+    vi.mocked(authApi.getAuthStatus).mockResolvedValue({
+      setup_required: false,
+      has_admin: true,
+    } as never);
+
+    render(
+      <MemoryRouter initialEntries={["/register"]}>
+        <Routes>
+          <Route
+            path="/register"
+            element={
+              <AuthGuard guestOnly>
+                <div>register-form</div>
+              </AuthGuard>
+            }
+          />
+          <Route path="/" element={<div>home-shell</div>} />
+        </Routes>
+      </MemoryRouter>,
+    );
+
+    expect(await screen.findByText("register-form")).toBeInTheDocument();
+    expect(screen.queryByText("home-shell")).not.toBeInTheDocument();
   });
 
   it("retries auth from the offline panel without leaving a blank shell", async () => {

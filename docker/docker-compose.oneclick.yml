@@ -1,0 +1,115 @@
+# =============================================================================
+# Octop — 一键启动编排（自包含）
+#
+# 这是对官方 docker/docker-compose.yml 的「一键启动」增强版，语义等价、可直接
+# 与官方文件互相替代。相比官方版本，本文件做了三件事：
+#   1. 数据盘默认落到 D:/octop-data/.octop（Windows 用户默认不写 C 盘）；
+#   2. 内置可选的 PostgreSQL（pgvector）服务，与 octop 同网络互通；
+#      Postgres 只在启用 `--profile postgres` 时启动；
+#   3. 补齐 depends_on / healthcheck，保证「数据库就绪后再启动应用」。
+#
+# 用法（在仓库根目录执行）：
+#   docker compose --env-file docker/oneclick.env \
+#     -f docker/docker-compose.oneclick.yml up -d --build
+#
+#   # 带 PostgreSQL：
+#   docker compose --env-file docker/oneclick.env \
+#     -f docker/docker-compose.oneclick.yml --profile postgres up -d --build
+#
+# 或者直接用封装好的脚本，省掉上面这串参数：
+#   bash docker/octop-up.sh              # SQLite 模式（最简，推荐先跑通）
+#   bash docker/octop-up.sh --postgres   # PostgreSQL 模式
+#
+# 与官方文件的差异溯源：官方 docker/docker-compose.yml
+# =============================================================================
+
+# 显式固定 Compose 项目名，否则会按文件所在目录推断成 "docker"，
+# 导致网络名变成 docker_default、可能与其他项目撞名。
+name: octop
+
+services:
+  # ---------------------------------------------------------------------------
+  # Octop 应用（多阶段构建：前端 vite 打包 → Python 运行时）
+  # ---------------------------------------------------------------------------
+  octop:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      # 构建参数透传：配合 `octop-up.sh --mirror` 走镜像源加速。
+      # 不设这些值时为空字符串，Dockerfile 会退回官方源，行为与官方一致。
+      args:
+        NPM_REGISTRY: ${NPM_REGISTRY:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+        PIP_TRUSTED_HOST: ${PIP_TRUSTED_HOST:-}
+        APT_MIRROR: ${APT_MIRROR:-}
+        # 低内存构建机（<4G）可调低，只封顶不预分配
+        NODE_MAX_OLD_SPACE_SIZE: ${NODE_MAX_OLD_SPACE_SIZE:-2048}
+    image: octop:latest
+    container_name: octop
+    restart: unless-stopped
+    ports:
+      - "${OCTOP_PORT:-8088}:${OCTOP_PORT:-8088}"
+    volumes:
+      # 数据盘：容器内 HOME=/data，故数据落在 /data/.octop
+      - ${OCTOP_DATA:-D:/octop-data/.octop}:/data/.octop
+    environment:
+      - HOME=/data
+      - OCTOP_BIND_HOST=0.0.0.0
+      - OCTOP_PORT=${OCTOP_PORT:-8088}
+      - OCTOP_LOG_LEVEL=${OCTOP_LOG_LEVEL:-info}
+      # 首次初始化管理员（密码留空 → 自动生成随机强密码并写入 credential.txt）
+      - OCTOP_DEFAULT_PASSWORD=${OCTOP_DEFAULT_PASSWORD:-}
+      - OCTOP_ADMIN_USERNAME=${OCTOP_ADMIN_USERNAME:-admin}
+      - OCTOP_ADMIN_DISPLAY_NAME=${OCTOP_ADMIN_DISPLAY_NAME:-Admin}
+      # 控制面数据库：全部留空 = 使用 SQLite（~/.octop/octop.db）
+      # 启用 postgres profile 时由 octop-up.sh 注入下面这组变量
+      - OCTOP_DATABASE_URL=${OCTOP_DATABASE_URL:-}
+      - OCTOP_DATABASE_DRIVER=${OCTOP_DATABASE_DRIVER:-}
+      - OCTOP_DATABASE_SQLITE_PATH=${OCTOP_DATABASE_SQLITE_PATH:-}
+      - OCTOP_DATABASE_HOST=${OCTOP_DATABASE_HOST:-}
+      - OCTOP_DATABASE_PORT=${OCTOP_DATABASE_PORT:-}
+      - OCTOP_DATABASE_NAME=${OCTOP_DATABASE_NAME:-}
+      - OCTOP_DATABASE_USER=${OCTOP_DATABASE_USER:-}
+      - OCTOP_DATABASE_PASSWORD=${OCTOP_DATABASE_PASSWORD:-}
+      # LLM 凭证（可选，也可稍后在控制台里配）
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - DASHSCOPE_API_KEY=${DASHSCOPE_API_KEY:-}
+      # 可观测性（可选）
+      - LANGFUSE_TRACING_ENABLED=${LANGFUSE_TRACING_ENABLED:-false}
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_BASE_URL=${LANGFUSE_BASE_URL:-}
+    # Postgres 未启用（profile 关闭）时该依赖会被忽略；
+    # 启用时则保证「先等数据库健康，再拉起应用」。
+    depends_on:
+      postgres:
+        condition: service_healthy
+        required: false
+
+  # ---------------------------------------------------------------------------
+  # PostgreSQL + pgvector（可选，仅在 --profile postgres 时启动）
+  # 与 octop 处于同一默认网络，容器内可直接用主机名 postgres 访问。
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: octop-postgres
+    profiles: ["postgres"]
+    restart: unless-stopped
+    ports:
+      - "${OCTOP_PG_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${OCTOP_PG_USER:-octop}
+      POSTGRES_PASSWORD: ${OCTOP_PG_PASSWORD:-octop}
+      POSTGRES_DB: ${OCTOP_PG_DB:-octop}
+    volumes:
+      - octop_pgdata:/var/lib/postgresql/data
+      - ./postgres/init-vector.sql:/docker-entrypoint-initdb.d/01-vector.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+
+volumes:
+  octop_pgdata:

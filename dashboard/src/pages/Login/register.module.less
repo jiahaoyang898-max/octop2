@@ -1,0 +1,210 @@
+/* 墨枢注册页 —— 与登录页同款视觉（共享 index.module.less）
+ * 本文件只放注册页特有部件：密码强度条 / 一致提示 / 条款勾选 / 初始化提示
+ */
+
+/* 输入框 + 右侧眼睛按钮（密码明文切换） */
+.inpWithEye {
+  position: relative;
+}
+
+.inpWithEye :global(.octop-input-affix-wrapper) {
+  padding-right: 48px;
+}
+
+.eyeBtn {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  color: rgba(143, 160, 184, 0.8);
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #e6edf7;
+  }
+}
+
+/* 密码强度条（设计稿 .strength） */
+.strength {
+  display: flex;
+  gap: 5px;
+  margin-top: 9px;
+  padding: 0 4px;
+}
+
+.strength i {
+  height: 3px;
+  flex: 1;
+  border-radius: 99px;
+  background: rgba(148, 163, 184, 0.16);
+  transition: background 0.25s ease;
+}
+
+.strength.s1 i:nth-child(-n + 1) {
+  background: #f5b544;
+}
+
+.strength.s2 i:nth-child(-n + 2) {
+  background: #3ddc97;
+}
+
+.strength.s3 i:nth-child(-n + 3) {
+  background: #2ed9e0;
+}
+
+.strengthTxt {
+  margin-top: 6px;
+  padding: 0 4px;
+  font-size: 10.5px;
+  color: rgba(143, 160, 188, 0.75);
+  transition: color 0.25s ease;
+}
+
+.strengthTxt.w1 {
+  color: rgba(245, 181, 68, 0.9);
+}
+
+.strengthTxt.w2 {
+  color: rgba(61, 220, 151, 0.9);
+}
+
+.strengthTxt.w3 {
+  color: rgba(46, 217, 224, 0.95);
+}
+
+/* 两次输入一致提示（设计稿 .match） */
+.match {
+  margin-top: 7px;
+  padding: 0 4px;
+  min-height: 14px;
+  font-size: 10.5px;
+  transition: color 0.2s ease;
+}
+
+.matchOk {
+  color: rgba(61, 220, 151, 0.9);
+}
+
+.matchBad {
+  color: rgba(240, 85, 79, 0.92);
+}
+
+/* 表单标签里的可选说明 */
+.labelOpt {
+  color: rgba(143, 160, 188, 0.55);
+  font-weight: 400;
+}
+
+/* 服务条款勾选行（设计稿 .agree） */
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 11.5px;
+  line-height: 1.6;
+  color: #8fa0bc;
+}
+
+.agreeInput {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.agreeBox {
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+}
+
+.agreeBox svg {
+  width: 11px;
+  height: 11px;
+  color: transparent;
+  transition: color 0.2s ease;
+}
+
+.agreeInput:checked + .agreeBox {
+  border-color: rgba(46, 217, 224, 0.5);
+  background: rgba(46, 217, 224, 0.16);
+}
+
+.agreeInput:checked + .agreeBox svg {
+  color: #2ed9e0;
+}
+
+.agreeInput:focus-visible + .agreeBox {
+  box-shadow: 0 0 0 3px rgba(46, 217, 224, 0.18);
+}
+
+.agreeLink {
+  color: #4c8dff;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #2ed9e0;
+  }
+}
+
+/* 实例尚未初始化时的引导块 */
+.setupNotice {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(245, 181, 68, 0.28);
+  background: rgba(245, 181, 68, 0.07);
+}
+
+.setupNoticeTitle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #f5b544;
+}
+
+.setupNoticeDesc {
+  margin: 8px 0 0;
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: rgba(143, 160, 188, 0.85);
+}
+
+.setupNoticeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 181, 68, 0.38);
+  background: rgba(245, 181, 68, 0.1);
+  color: #f5b544;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.18s;
+
+  &:hover {
+    background: rgba(245, 181, 68, 0.18);
+    border-color: rgba(245, 181, 68, 0.6);
+  }
+}

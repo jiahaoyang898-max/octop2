@@ -9,6 +9,7 @@ export type ThemePalette =
   | "emerald"
   | "amber"
   | "slate"
+  | "moshu"
   | "custom";
 
 export const VALID_PALETTES: ThemePalette[] = [
@@ -20,12 +21,13 @@ export const VALID_PALETTES: ThemePalette[] = [
   "emerald",
   "amber",
   "slate",
+  "moshu",
 ];
 
 /** Curated palettes only — "custom" is handled separately via a hex value. */
 export const CURATED_PALETTES: ThemePalette[] = [...VALID_PALETTES];
 
-export const DEFAULT_PALETTE: ThemePalette = "rose";
+export const DEFAULT_PALETTE: ThemePalette = "moshu";
 export const DEFAULT_CUSTOM_COLOR = "#4B74FA";
 
 /** True when the value is one of the curated palette keys (not "custom"/hex). */
@@ -52,6 +54,7 @@ export const PALETTE_SWATCH: Record<ThemePalette, string> = {
   emerald: "#10B981",
   amber: "#F59E0B",
   slate: "#64748B",
+  moshu: "#4C8DFF",
   custom: DEFAULT_CUSTOM_COLOR, // live swatch is provided by the picker UI
 };
 
@@ -240,6 +243,31 @@ export const ANTD_BRAND_TOKENS: Record<
       colorPrimaryTextHover: "#CBD5E1",
       colorPrimaryTextActive: "#64748B",
       colorLink: "#94A3B8",
+    },
+  },
+  // 墨枢品牌色：主蓝 #4C8DFF（暗色链接/图表）+ 达标的深蓝主色（按钮白字对比度 ≥4.5）
+  // ⚠️ 色值必须与 theme-vars.css 中 html[data-palette="moshu"] 块的 --fn-* 保持一致，
+  //    否则 antd 原生组件与自定义组件（走 --fn-*）的品牌色会出现漂移。
+  //    对照：hover #2E56C7 ↔ --fn-color-brand-hover；dark 文字 #7BA7FF ↔ --fn-text-brand。
+  moshu: {
+    light: {
+      colorPrimary: "#3A6BE0",
+      colorPrimaryHover: "#2E56C7",
+      colorPrimaryActive: "#264CB8",
+      colorLink: "#3A6BE0",
+    },
+    dark: {
+      colorPrimary: "#3A6BE0",
+      colorPrimaryBg: "rgba(76, 141, 255, 0.14)",
+      colorPrimaryBgHover: "rgba(76, 141, 255, 0.2)",
+      colorPrimaryBorder: "rgba(76, 141, 255, 0.3)",
+      colorPrimaryBorderHover: "rgba(76, 141, 255, 0.4)",
+      colorPrimaryHover: "#2E56C7",
+      colorPrimaryActive: "#264CB8",
+      colorPrimaryText: "#7BA7FF",
+      colorPrimaryTextHover: "#9DBBFF",
+      colorPrimaryTextActive: "#4C8DFF",
+      colorLink: "#4C8DFF",
     },
   },
 };

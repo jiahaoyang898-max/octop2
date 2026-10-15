@@ -10,6 +10,12 @@ import BootOfflinePanel from "./BootOfflinePanel";
 
 interface AuthGuardProps {
   children: React.ReactNode;
+  /**
+   * 反向守卫：已登录时重定向到首页，未登录才渲染 children。
+   * 用于 /login、/register 这类「只有访客该看到」的页面 —— 复用本组件
+   * 既有的 `setup/status → token → /auth/me` 判定链，不另写一套。
+   */
+  guestOnly?: boolean;
 }
 
 /**
@@ -34,7 +40,7 @@ interface AuthGuardProps {
  * navigate identity changes with the location, which would re-run the gate
  * on every sidebar click and flash a full-page spinner.
  */
-export default function AuthGuard({ children }: AuthGuardProps) {
+export default function AuthGuard({ children, guestOnly = false }: AuthGuardProps) {
   const navigate = useNavigate();
   const navigateRef = useRef(navigate);
   navigateRef.current = navigate;
@@ -61,8 +67,29 @@ export default function AuthGuard({ children }: AuthGuardProps) {
           return;
         }
 
-        // Setup done. Need a token.
         const token = getAuthToken();
+
+        if (guestOnly) {
+          // 已登录（token 存在且 /auth/me 通过）→ 回首页；否则留在访客页。
+          // setup_required 已在上面处理，这里不再重复。
+          if (token) {
+            try {
+              await authApi.me();
+              if (cancelled) return;
+              navigateRef.current("/", { replace: true });
+              return;
+            } catch {
+              // 令牌失效 / 后端不可达 → 按访客处理，正常渲染页面
+            }
+          }
+          if (!cancelled) {
+            setAuthed(true);
+            setChecking(false);
+          }
+          return;
+        }
+
+        // Setup done. Need a token.
         if (!token) {
           if (!cancelled) {
             setAuthed(false);

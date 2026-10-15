@@ -1,11 +1,24 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { request, requestUpload } = vi.hoisted(() => ({
-  request: vi.fn(),
-  requestUpload: vi.fn(),
-}));
+const { request, requestUpload, requestBlob, bridgeAgentHeaders } = vi.hoisted(
+  () => ({
+    request: vi.fn(),
+    requestUpload: vi.fn(),
+    requestBlob: vi.fn(),
+    // Mirrors the real helper in ../request: no id → undefined (no header).
+    bridgeAgentHeaders: vi.fn((id?: string | null) => {
+      const trimmed = (id ?? "").trim();
+      return trimmed ? { "X-Octop-Agent-Id": trimmed } : undefined;
+    }),
+  }),
+);
 
-vi.mock("../request", () => ({ request, requestUpload }));
+vi.mock("../request", () => ({
+  request,
+  requestUpload,
+  requestBlob,
+  bridgeAgentHeaders,
+}));
 
 import { knowledgeBasesApi } from "./knowledgeBases";
 
@@ -22,7 +35,11 @@ describe("knowledgeBasesApi", () => {
     knowledgeBasesApi.getOnnxDownloadStatus();
     knowledgeBasesApi.activateOnnx("BAAI/bge-small-zh-v1.5");
 
-    expect(request).toHaveBeenNthCalledWith(1, "/knowledge-bases/capability");
+    // getCapability() forwards agent-scoped headers; without an agent id the
+    // helper returns undefined, so the options object is present but empty.
+    expect(request).toHaveBeenNthCalledWith(1, "/knowledge-bases/capability", {
+      headers: undefined,
+    });
     expect(request).toHaveBeenNthCalledWith(2, "/knowledge-bases/feature", {
       method: "PUT",
       body: JSON.stringify({ enabled: true, model: "BAAI/bge-small" }),

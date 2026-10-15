@@ -33,6 +33,7 @@ describe("theme palettes", () => {
       "emerald",
       "amber",
       "slate",
+      "moshu",
     ]);
   });
 

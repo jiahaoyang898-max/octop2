@@ -26,10 +26,10 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <meta name="apple-mobile-web-app-title" content="Octop" />
+    <meta name="apple-mobile-web-app-title" content="墨枢" />
     <!-- Web App Manifest -->
     <link rel="manifest" href="/manifest.json" />
-    <title>Octop</title>
+    <title>墨枢</title>
     <!--
       Resolve dashboard theme before first paint. Must stay a classic script:
       the splash CSS keys off html[data-theme], not prefers-color-scheme,
@@ -49,7 +49,7 @@
         }
         try {
           var raw = localStorage.getItem(KEY);
-          var pref = "system";
+          var pref = "dark"; // 墨枢：无存储偏好时默认暗色
           if (raw === "light" || raw === "dark" || raw === "system") {
             pref = raw;
           } else if (raw) {
@@ -70,7 +70,7 @@
           if (systemDark()) mode = "dark";
         }
         document.documentElement.setAttribute("data-theme", mode);
-        var themeColor = mode === "dark" ? "#1a1c28" : "#ffffff";
+        var themeColor = mode === "dark" ? "#060A12" : "#ffffff";
         var metas = document.querySelectorAll('meta[name="theme-color"]');
         for (var i = 0; i < metas.length; i++) {
           metas[i].setAttribute("content", themeColor);

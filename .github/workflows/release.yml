@@ -62,8 +62,14 @@ jobs:
           name: dist
           path: dist/
 
+  # ⛔ 已封堵（2026-10-15）：本 job 会把名为 `octop` 的包发布到 PyPI。
+  # 原因：pyproject.toml:6 包名仍为 "octop"（与 src/octop/ 的 import 链强耦合，属技术字面量，暂不改名）。
+  #       发布将与 PyPI 上的官方 `octop` 包撞名，并违反禁令一「不向 PyPI 发布 octop 包名」。
+  # 恢复条件：包名改为自有前缀（如 moshu-*）并同步 import 链、CI 与文档后，才可删除下面的 `if: false`。
+  # 依据文档：D:\ruanjian\octop\octop-合规禁令-2026-10-15.md（禁令一）
   publish:
     name: Publish to PyPI
+    if: false
     needs: build
     runs-on: ubuntu-latest
     environment: pypi
@@ -79,9 +85,12 @@ jobs:
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
+  # 依赖改链：原为 needs: publish。publish 被 if: false 禁用后会 skipped，
+  # 若继续 needs: publish 会导致本 job 永远不执行、GitHub Release 创建不出来，
+  # 连带打断 sync-develop / trigger-fnos 与 FPK 产物分发。改为直接依赖 build。
   github-release:
     name: Create GitHub Release
-    needs: publish
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -117,9 +126,18 @@ jobs:
               echo ""
               echo "## Install"
               echo ""
+              # 本 Release 不会发布到 PyPI（publish job 已 if: false，见 octop-合规禁令-2026-10-15.md 禁令一）。
+              # PyPI 上的 octop 是上游官方包，直接写 "pip install octop==$version" 会误导用户装到他人的包。
+              echo "> ⚠️ 本项目**未发布到 PyPI**（Release 的 \`publish\` job 已禁用）。"
+              echo "> 请勿执行 \`pip install octop==$version\` —— PyPI 上的 \`octop\` 是上游官方包，不是本定制版。"
+              echo ""
+              echo "请改用以下方式获取："
+              echo ""
               echo '```bash'
-              echo "pip install octop==$version"
+              echo "docker pull ghcr.io/$(echo '${{ github.repository }}' | tr '[:upper:]' '[:lower:]'):${version}"
               echo '```'
+              echo ""
+              echo "- 或从本 Release 下方的 **Assets** 下载安装包 / 使用源码部署"
             } > .release-notes.md
           fi
           if ! grep -q '^## Downloads' .release-notes.md; then
